@@ -1,0 +1,19 @@
+# 这个是Pod的副本数
+replicas: 3
+
+# 镜像的名称和tags
+image:
+  name: nginx
+  tags: "1.20"
+
+# 镜像的拉取策略,默认不配置则为IfNotPresent
+imagepullpolicy: ""
+
+
+# Service的端口和，Service所代理的后端Pod的端口
+service:
+  enabled: false
+  port: 80
+  containerport: 80
+
+

@@ -1,0 +1,98 @@
+
+# 测试的Version
+version: "hello"
+configmap:
+  username: oldxu
+  password: oldxu.net
+
+
+# 名称
+#fullnameOverride: "full-app-oldxu"
+#nameOverride: "hello-app-oldxu"
+
+# Pod的副本数
+replicas: 3
+
+# Pod镜像和tags
+image:
+  name: uhub.service.ucloud.cn/oldxu/demoapp
+  tags: "v1.1"
+
+# 镜像的拉取策略 IfNotPresent、Nerver、Always、default是IfNotPresent
+imagePullPolicy: ""
+
+
+# Pod的资源限制
+resources:
+  limits:
+    memory: 200Mi
+    cpu: 100m
+  requests:
+    memory: 200Mi
+    cpu: 100m
+
+
+# Pod的探针检测
+readinessProbe:
+  failureThreshold: 3
+  httpGet:
+    path: /
+    port: 80
+  periodSeconds: 10
+  timeoutSeconds: 15
+
+
+
+
+# Pod的环境变量
+env:
+- name: username
+  value: "oldxu"
+- name: password
+  value: "oldxu"
+- name: hello
+  value: world
+
+
+# Pod相关的ConfigMap配置
+AppConfig: 
+  nginx.conf: |-
+    server {
+      listen 80;
+      server_name app.oldxu.net;
+      location / {
+        index index.html;
+      }
+    }
+  nginx-status.conf: |-
+    server {
+      listen 8899;
+      stub_status;
+    }
+
+# Pod安全
+#SecurityContext:
+#  runAsUser: 1000
+#  runAsGroup: 1000
+#
+
+# Service的端口和Port的端口
+service:
+  port: 80
+  containerPort: 80
+
+
+# Ingress的配置
+ingress:
+  enabled: true
+  ingressClassName: "nginx"
+  hosts: app-tls.oldxu.net
+
+
+# TLS配置段
+tls:
+  enabled: false
+  cretpath: "ssl/server.crt"
+  keypath: "ssl/server.key"
+
+

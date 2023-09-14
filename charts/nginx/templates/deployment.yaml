@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-dploy-helm
+spec:
+  replicas: {{ .Values.replicas | default "1" }}
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: nginx
+        image: {{ .Values.image.name }}:{{ .Values.image.tags }}
+        imagePullPolicy: {{ .Values.imagepullpolicy | default "IfNotPresent" }}
+        ports:
+        - containerPort: {{ .Values.service.containerport }}

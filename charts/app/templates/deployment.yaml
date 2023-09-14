@@ -1,0 +1,32 @@
+{{- if .Capabilities.APIVersions.Has "apps/v1" -}}
+apiVersion: apps/v1
+{{ else }}
+apiversion: extensions/v1beta1
+{{- end -}}
+kind: Deployment
+metadata:
+  name: {{ include "app.fullname" . }} 
+  labels:
+    {{- include "mychart.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicas | default "1" }}
+  selector:
+    matchLabels:
+    {{- include "app.web.labels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+      {{- include "app.web.labels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: {{ .Release.Name }}
+        image: {{ .Values.image.name | required "镜像名称根本不存在!" }}:{{ .Values.image.tags }}
+        imagePullPolicy: {{ .Values.imagePullPolicy | default "IfNotPresent" }}
+        ports:
+        - containerPort: {{ .Values.service.containerPort }}
+        resource: 
+          {{- toYaml .Values.resources | nindent 10 }}
+        {{- if .Values.startupProbe }}
+
+
+
